@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fabi Ware — Beyond Human Vision: Signal 01</title>
+<meta name="description" content="See What Others Can't. Beyond Human Vision: Signal 01 transmits August 1. Join Signal Access for first entry. Dare to Be Different." />
+<meta property="og:title" content="Fabi Ware — Beyond Human Vision: Signal 01" />
+<meta property="og:description" content="They see what already exists. You see what comes next. Signal 01 — August 1." />
+<meta name="theme-color" content="#0A0912" />
+<meta name="robots" content="noindex, nofollow" /><!-- PREVIEW: remove this line at real launch so search engines can find the page -->
+<!--
+  ============================================================================
+  FABI WARE — full "coming soon" site shell (fabi-ware.com front door)
+  Sibling of brand/signal-access/index.html (the minimal link-in-bio page).
+  Same email-capture wiring: see SIGNAL_ENDPOINT below + ACTIVATE guide in
+  brand/signal-access/ACTIVATE-email-capture.md. Set BOTH form actions + the
+  constant to your endpoint (Formspree / Shopify / Mailchimp).
+
+  ACCURACY GUARDRAILS (brand brief — keep intact):
+    - No pricing. No product claims (fabric/weight/UV/"limited edition").
+    - No fake scarcity. Real dates only: early access Jul 30, launch Aug 1,
+      preorder closes Aug 5, 2026.
+    - Product is intentionally VEILED (emblem/motifs, not the AI mockup) — the
+      page never implies a manufactured product exists yet.
+  ============================================================================
+-->
+<style>
+  :root{
+    --bg:#0A0912; --bg-2:#100D1D; --surface:#15122A; --line:#2A2540;
+    --silver:#C7C9D6; --silver-dim:#8B8AA3; --white:#EDEEF4;
+    --uv:#8B5CFF; --uv-soft:#A98BFF; --blue:#2E8CFF;
+    --lime:#C6FF3D; --lime-ink:#0A0912;
+    --mono:ui-monospace,"SF Mono","Cascadia Code","JetBrains Mono",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --maxw:1080px; --col:640px;
+  }
+  :root[data-theme="light"],:root[data-theme="dark"]{ color-scheme:dark; }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  html,body{ margin:0; padding:0; }
+  body{ background:var(--bg); color:var(--silver); font-family:var(--sans);
+    -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+    overflow-x:hidden; line-height:1.5; }
+  @media (prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } }
+
+  #field{ position:fixed; inset:0; width:100%; height:100%; z-index:0; display:block; pointer-events:none; }
+  .atmos{ position:fixed; inset:0; z-index:1; pointer-events:none;
+    background:radial-gradient(120% 70% at 50% -5%, rgba(139,92,255,.16), transparent 55%),
+      radial-gradient(120% 120% at 50% 50%, transparent 58%, rgba(5,4,10,.78) 100%); }
+  .atmos::after{ content:""; position:absolute; inset:0;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 3px);
+    mix-blend-mode:overlay; opacity:.5; }
+
+  /* nav */
+  header.nav{ position:fixed; top:0; left:0; right:0; z-index:20;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px clamp(18px,4vw,40px); transition:background .3s, border-color .3s;
+    border-bottom:1px solid transparent; }
+  header.nav.stuck{ background:rgba(10,9,18,.72); backdrop-filter:blur(10px); border-bottom-color:var(--line); }
+  .word{ font-family:var(--mono); font-size:13px; letter-spacing:.34em; text-transform:uppercase;
+    color:var(--white); text-decoration:none; }
+  .word .s{ color:var(--uv-soft); }
+  .nav-cta{ font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    color:var(--lime-ink); background:var(--lime); border-radius:999px; padding:9px 16px;
+    text-decoration:none; transition:filter .2s, box-shadow .2s; }
+  .nav-cta:hover{ filter:brightness(1.06); box-shadow:0 6px 22px rgba(198,255,61,.28); }
+
+  main{ position:relative; z-index:2; }
+  section{ position:relative; padding:clamp(72px,12vh,140px) clamp(20px,5vw,40px); }
+  .inner{ max-width:var(--maxw); margin:0 auto; }
+  .center{ display:flex; flex-direction:column; align-items:center; text-align:center; }
+
+  /* reveal on scroll */
+  .rev{ opacity:0; transform:translateY(16px); filter:blur(5px);
+    transition:opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1), filter .8s; }
+  .rev.in{ opacity:1; transform:none; filter:none; }
+  .rev.s2{ transition-delay:.12s } .rev.s3{ transition-delay:.24s } .rev.s4{ transition-delay:.36s }
+  @media (prefers-reduced-motion:reduce){ .rev{ opacity:1; transform:none; filter:none; transition:none; } }
+
+  /* shared bits */
+  .readout{ display:inline-flex; align-items:center; gap:10px; font-family:var(--mono); font-size:11px;
+    letter-spacing:.28em; text-transform:uppercase; color:var(--silver-dim);
+    border:1px solid var(--line); border-radius:999px; padding:8px 14px 8px 12px;
+    background:rgba(21,18,42,.5); backdrop-filter:blur(4px); }
+  .dot{ width:8px; height:8px; border-radius:50%; background:var(--lime);
+    box-shadow:0 0 0 0 rgba(198,255,61,.6); animation:pulse 1.9s ease-out infinite; }
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(198,255,61,.55)}70%{box-shadow:0 0 0 9px rgba(198,255,61,0)}100%{box-shadow:0 0 0 0 rgba(198,255,61,0)}}
+  .readout b{ color:var(--silver); font-weight:600; } .readout .sep{ color:var(--line); }
+  .eyebrow{ font-family:var(--mono); font-size:11px; letter-spacing:.34em; text-transform:uppercase;
+    color:var(--uv-soft); margin:0 0 18px; }
+
+  h1{ font-family:var(--sans); color:var(--white); font-weight:800; letter-spacing:-.03em;
+    line-height:.96; font-size:clamp(3rem,11vw,6.4rem); margin:16px 0 0; text-wrap:balance; }
+  h1 .glow{ color:var(--uv-soft); text-shadow:0 0 30px rgba(139,92,255,.55),0 0 70px rgba(139,92,255,.22); }
+  .sub{ margin:20px 0 0; max-width:36ch; color:var(--silver); font-size:clamp(1.05rem,3.4vw,1.25rem);
+    line-height:1.55; text-wrap:balance; }
+  .brief{ margin:14px 0 0; max-width:46ch; color:var(--silver-dim); font-size:.92rem; }
+
+  /* emblem */
+  .emblem{ width:112px; height:112px; }
+  .emblem.big{ width:150px; height:150px; }
+  .emblem .orbit{ transform-origin:50% 50%; animation:spin 46s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg);} }
+  .lid{ transform-box:fill-box; transform-origin:center; }
+  .blink .lid{ animation:blink 6.5s ease-in-out infinite; }
+  @keyframes blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+  @media (prefers-reduced-motion:reduce){ .emblem .orbit,.blink .lid,.dot{ animation:none; } }
+
+  /* countdown */
+  .count{ margin:34px 0 0; }
+  .count .lab{ font-family:var(--mono); font-size:10.5px; letter-spacing:.34em; text-transform:uppercase;
+    color:var(--silver-dim); margin-bottom:12px; text-align:center; }
+  .clock{ display:flex; gap:10px; justify-content:center; }
+  .unit{ min-width:68px; padding:12px 8px 9px; border:1px solid var(--line); border-radius:12px;
+    background:linear-gradient(180deg,rgba(21,18,42,.7),rgba(10,9,18,.4)); }
+  .unit .n{ font-family:var(--mono); font-size:1.9rem; font-weight:600; color:var(--white);
+    font-variant-numeric:tabular-nums; line-height:1; } .unit .k{ font-family:var(--mono); font-size:9.5px;
+    letter-spacing:.22em; text-transform:uppercase; color:var(--silver-dim); margin-top:7px; }
+
+  /* capture form */
+  form.cap{ margin:34px 0 0; width:100%; max-width:440px; }
+  .row{ display:flex; gap:9px; }
+  input[type=email]{ flex:1 1 auto; min-width:0; font-family:var(--mono); font-size:15px; color:var(--white);
+    background:rgba(10,9,18,.6); border:1px solid var(--line); border-radius:12px; padding:15px 16px;
+    transition:border-color .18s, box-shadow .18s; }
+  input[type=email]::placeholder{ color:#5a5675; }
+  input[type=email]:focus{ outline:none; border-color:var(--uv); box-shadow:0 0 0 3px rgba(139,92,255,.22); }
+  button.go{ flex:0 0 auto; cursor:pointer; font-family:var(--mono); font-size:13px; font-weight:700;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--lime-ink); background:var(--lime);
+    border:none; border-radius:12px; padding:0 20px; transition:transform .12s, box-shadow .2s, filter .2s; }
+  button.go:hover{ filter:brightness(1.06); box-shadow:0 8px 30px rgba(198,255,61,.28); }
+  button.go:active{ transform:translateY(1px); }
+  :focus-visible{ outline:2px solid var(--uv-soft); outline-offset:3px; }
+  .fine{ margin:12px 2px 0; font-family:var(--mono); font-size:10.5px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--silver-dim); text-align:center; }
+  .fine.err{ color:#FF6B8B; }
+  .granted{ display:none; width:100%; max-width:440px; margin:30px 0 0; text-align:center;
+    border:1px solid rgba(198,255,61,.45); border-radius:16px; padding:24px 20px;
+    background:linear-gradient(180deg,rgba(139,92,255,.10),rgba(10,9,18,.3)); }
+  .granted.on{ display:block; }
+  .granted .tag{ font-family:var(--mono); font-size:11px; letter-spacing:.3em; text-transform:uppercase;
+    color:var(--lime); display:inline-flex; align-items:center; gap:9px; }
+  .granted h3{ font-family:var(--sans); color:var(--white); font-weight:800; font-size:1.35rem; margin:10px 0 6px; }
+  .granted p{ color:var(--silver); font-size:.92rem; margin:0 auto; max-width:32ch; }
+
+  /* manifesto */
+  .manifesto{ background:linear-gradient(180deg, transparent, rgba(21,18,42,.35), transparent); }
+  .manifesto .inner{ max-width:760px; }
+  .quote{ font-family:var(--sans); font-weight:800; letter-spacing:-.02em; color:var(--white);
+    font-size:clamp(1.7rem,5.2vw,2.9rem); line-height:1.12; text-wrap:balance; }
+  .quote .uv{ color:var(--uv-soft); }
+  .body-lg{ margin:26px auto 0; max-width:56ch; color:var(--silver); font-size:1.06rem; line-height:1.7; }
+  .body-lg + .body-lg{ margin-top:16px; }
+  .kicker{ display:block; margin-top:30px; font-family:var(--mono); font-size:12px; letter-spacing:.3em;
+    text-transform:uppercase; color:var(--uv-soft); }
+
+  /* drop reveal */
+  .drop .inner{ max-width:720px; }
+  .capsule-name{ font-family:var(--mono); font-size:12px; letter-spacing:.3em; text-transform:uppercase;
+    color:var(--silver-dim); margin-top:22px; }
+  .capsule-name b{ color:var(--white); }
+
+  /* timeline */
+  .tl{ list-style:none; margin:40px auto 0; padding:0; max-width:640px; display:flex; flex-direction:column; gap:0; }
+  .tl li{ display:grid; grid-template-columns:120px 1fr; gap:20px; padding:22px 0;
+    border-top:1px solid var(--line); align-items:baseline; text-align:left; }
+  .tl li:last-child{ border-bottom:1px solid var(--line); }
+  .tl .date{ font-family:var(--mono); font-size:13px; letter-spacing:.08em; color:var(--uv-soft);
+    font-variant-numeric:tabular-nums; }
+  .tl .ev{ }
+  .tl .ev .t{ font-family:var(--sans); font-weight:700; color:var(--white); font-size:1.05rem; letter-spacing:.01em; }
+  .tl .ev .d{ color:var(--silver-dim); font-size:.9rem; margin-top:4px; }
+  .tl li.live .date{ color:var(--lime); }
+
+  /* join band */
+  .join{ background:linear-gradient(180deg, rgba(139,92,255,.10), transparent); }
+
+  footer{ position:relative; z-index:2; border-top:1px solid var(--line);
+    padding:44px 20px 40px; text-align:center; }
+  .mark{ font-family:var(--mono); font-size:11px; letter-spacing:.3em; text-transform:uppercase; color:var(--silver); }
+  .links{ margin-top:14px; display:flex; gap:18px; justify-content:center; flex-wrap:wrap; }
+  .links a{ font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--silver-dim); text-decoration:none; border-bottom:1px solid transparent; padding-bottom:2px;
+    transition:color .18s, border-color .18s; }
+  .links a:hover{ color:var(--uv-soft); border-color:var(--uv); }
+  .tagline{ margin-top:16px; font-family:var(--sans); font-size:12px; letter-spacing:.36em;
+    text-transform:uppercase; color:var(--silver-dim); }
+  .tagline .star{ color:var(--uv-soft); }
+  .legal{ margin-top:14px; font-family:var(--mono); font-size:9.5px; letter-spacing:.2em;
+    text-transform:uppercase; color:#4A4560; }
+
+  @media (max-width:480px){
+    .row{ flex-direction:column; } button.go{ padding:14px 20px; } .unit{ min-width:60px; }
+    .tl li{ grid-template-columns:92px 1fr; gap:14px; }
+  }
+</style>
+</head>
+<body>
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="atmos" aria-hidden="true"></div>
+
+  <header class="nav" id="nav">
+    <a class="word" href="#top">Fabi <span class="s">Ware</span></a>
+    <a class="nav-cta" href="#join">◦ Signal Access</a>
+  </header>
+
+  <main id="top">
+
+    <!-- HERO -->
+    <section class="center" style="padding-top:clamp(120px,18vh,180px)">
+      <div class="inner center">
+        <div class="readout rev in">
+          <span class="dot" aria-hidden="true"></span><span>Signal Detected</span>
+          <span class="sep">//</span><b>Transmission 01</b><span class="sep">·</span><span>08.01.26</span>
+        </div>
+
+        <svg class="emblem blink rev in" style="margin:26px 0 4px" viewBox="0 0 120 120" role="img" aria-label="Fabi Ware Oracle emblem — three eyes in orbit">
+          <defs>
+            <radialGradient id="pg" cx="50%" cy="42%" r="60%"><stop offset="0%" stop-color="#A98BFF"/><stop offset="60%" stop-color="#6D3BFF"/><stop offset="100%" stop-color="#2E8CFF"/></radialGradient>
+            <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#EDEEF4"/><stop offset="45%" stop-color="#8B8AA3"/><stop offset="100%" stop-color="#2A2540"/></linearGradient>
+          </defs>
+          <g class="orbit">
+            <ellipse cx="60" cy="60" rx="54" ry="24" fill="none" stroke="url(#ring)" stroke-width="1.2" opacity=".7"/>
+            <ellipse cx="60" cy="60" rx="24" ry="54" fill="none" stroke="url(#ring)" stroke-width="1" opacity=".35"/>
+            <circle cx="114" cy="60" r="2" fill="#C6FF3D"/>
+          </g>
+          <g class="eyes">
+            <g class="eye"><path class="lid" d="M46 30 Q60 18 74 30 Q60 42 46 30 Z" fill="#0A0912" stroke="#8B8AA3" stroke-width="1.1"/><circle class="pupil" cx="60" cy="30" r="4.6" fill="url(#pg)"/></g>
+            <g class="eye"><path class="lid" d="M44 60 Q60 46 76 60 Q60 74 44 60 Z" fill="#0A0912" stroke="#C7C9D6" stroke-width="1.2"/><circle class="pupil" cx="60" cy="60" r="5.4" fill="url(#pg)"/></g>
+            <g class="eye"><path class="lid" d="M46 90 Q60 78 74 90 Q60 102 46 90 Z" fill="#0A0912" stroke="#8B8AA3" stroke-width="1.1"/><circle class="pupil" cx="60" cy="90" r="4.6" fill="url(#pg)"/></g>
+          </g>
+        </svg>
+
+        <h1 class="rev in">See What<br><span class="glow">Others Can't.</span></h1>
+        <p class="sub rev in">For those who were never meant to blend in.</p>
+        <p class="brief rev in"><em>Beyond Human Vision: Signal 01</em> transmits August 1. Signal Access opens the door 48 hours early.</p>
+
+        <div class="count rev in">
+          <div class="lab" id="count-label">Early access opens in</div>
+          <div class="clock">
+            <div class="unit"><div class="n" id="dd">--</div><div class="k">Days</div></div>
+            <div class="unit"><div class="n" id="hh">--</div><div class="k">Hrs</div></div>
+            <div class="unit"><div class="n" id="mm">--</div><div class="k">Min</div></div>
+            <div class="unit"><div class="n" id="ss">--</div><div class="k">Sec</div></div>
+          </div>
+        </div>
+
+        <form class="cap rev in" action="" method="POST" novalidate>
+          <div class="row">
+            <input type="email" name="email" autocomplete="email" required placeholder="you@frequency.com" aria-label="Email address" />
+            <button class="go" type="submit">Join Signal Access</button>
+          </div>
+          <p class="fine">Be first through the door on 08.01.26.</p>
+        </form>
+        <div class="granted" role="status" aria-live="polite">
+          <span class="tag"><span class="dot" aria-hidden="true"></span>Signal Access Granted</span>
+          <h3>You're on the list.</h3>
+          <p>Watch your inbox. The signal transmits <b>08.01.26</b> — and you'll be first through the door.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- MANIFESTO -->
+    <section class="manifesto center">
+      <div class="inner center">
+        <p class="eyebrow rev">The Signal</p>
+        <p class="quote rev">The world runs on repeat.<br>Same feeds. Same fits. <span class="uv">Same faces.</span></p>
+        <p class="body-lg rev s2">A signal flattened until everyone receives the exact same picture. Fabi Ware is the frequency underneath it — put the lenses on and the ordinary breaks open into chrome, ultraviolet, a dimension the others can't tune into.</p>
+        <p class="body-lg rev s3">You don't become someone else. You become <em>visible</em>. Your difference reads before you say a word.</p>
+        <span class="kicker rev s4">They see what already exists. You see what comes next.</span>
+      </div>
+    </section>
+
+    <!-- DROP -->
+    <section class="drop center">
+      <div class="inner center">
+        <p class="eyebrow rev">The Drop</p>
+        <svg class="emblem big blink rev" viewBox="0 0 120 120" aria-hidden="true">
+          <g class="orbit">
+            <ellipse cx="60" cy="60" rx="54" ry="24" fill="none" stroke="url(#ring)" stroke-width="1.2" opacity=".7"/>
+            <ellipse cx="60" cy="60" rx="24" ry="54" fill="none" stroke="url(#ring)" stroke-width="1" opacity=".35"/>
+            <circle cx="114" cy="60" r="2" fill="#C6FF3D"/>
+          </g>
+          <g class="eyes">
+            <g class="eye"><path class="lid" d="M46 30 Q60 18 74 30 Q60 42 46 30 Z" fill="#0A0912" stroke="#8B8AA3" stroke-width="1.1"/><circle cx="60" cy="30" r="4.6" fill="url(#pg)"/></g>
+            <g class="eye"><path class="lid" d="M44 60 Q60 46 76 60 Q60 74 44 60 Z" fill="#0A0912" stroke="#C7C9D6" stroke-width="1.2"/><circle cx="60" cy="60" r="5.4" fill="url(#pg)"/></g>
+            <g class="eye"><path class="lid" d="M46 90 Q60 78 74 90 Q60 102 46 90 Z" fill="#0A0912" stroke="#8B8AA3" stroke-width="1.1"/><circle cx="60" cy="90" r="4.6" fill="url(#pg)"/></g>
+          </g>
+        </svg>
+        <h1 class="rev" style="font-size:clamp(2.2rem,8vw,4rem)">Beyond<br><span class="glow">Human Vision.</span></h1>
+        <p class="body-lg rev s2">The first transmission. The Oracle is coming through — three eyes, one frequency, a capsule for the people who were never meant to blend in. What it is becomes clear on <b>08.01.26</b>. Signal Access sees it first.</p>
+        <p class="capsule-name rev s3"><b>Signal 01</b> &nbsp;·&nbsp; The Oracle &nbsp;·&nbsp; Beyond Human Vision</p>
+      </div>
+    </section>
+
+    <!-- TIMELINE -->
+    <section class="center">
+      <div class="inner">
+        <p class="eyebrow rev center" style="text-align:center">Transmission Schedule</p>
+        <ul class="tl">
+          <li class="rev live"><span class="date">07 · 30 · 26</span><span class="ev"><span class="t">Signal Access</span><span class="d">Early access opens. First through the door — 48 hours before anyone else.</span></span></li>
+          <li class="rev s2"><span class="date">08 · 01 · 26</span><span class="ev"><span class="t">Public Launch</span><span class="d">The Oracle transmits to everyone. Enter Signal 01.</span></span></li>
+          <li class="rev s3"><span class="date">08 · 05 · 26</span><span class="ev"><span class="t">Signal Closes</span><span class="d">The preorder window ends.</span></span></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- JOIN -->
+    <section class="join center" id="join">
+      <div class="inner center">
+        <p class="eyebrow rev">Don't Watch It Happen</p>
+        <h1 class="rev" style="font-size:clamp(2.2rem,8vw,4rem)">Join <span class="glow">Signal Access.</span></h1>
+        <p class="sub rev s2">The frequency opens to the list first. Be on it.</p>
+        <form class="cap rev s3" action="" method="POST" novalidate>
+          <div class="row">
+            <input type="email" name="email" autocomplete="email" required placeholder="you@frequency.com" aria-label="Email address" />
+            <button class="go" type="submit">Join Signal Access</button>
+          </div>
+          <p class="fine">Be first through the door on 08.01.26.</p>
+        </form>
+        <div class="granted" role="status" aria-live="polite">
+          <span class="tag"><span class="dot" aria-hidden="true"></span>Signal Access Granted</span>
+          <h3>You're on the list.</h3>
+          <p>Watch your inbox. The signal transmits <b>08.01.26</b>.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="mark">Fabi Ware · Beyond Human Vision</div>
+    <nav class="links">
+      <a href="https://fabi-ware.com/" target="_blank" rel="noopener">fabi-ware.com</a>
+      <a href="https://www.instagram.com/darebyfabiware/" target="_blank" rel="noopener">@darebyfabiware</a>
+    </nav>
+    <div class="tagline"><span class="star">✮</span> Dare to Be Different <span class="star">✮</span></div>
+    <div class="legal">Signal 01 · MMXXVI</div>
+  </footer>
+
+<script>
+(function(){
+  "use strict";
+  // ==== WIRE UP EMAIL CAPTURE HERE (same as the link-in-bio page) ============
+  var SIGNAL_ENDPOINT = ""; // e.g. "https://formspree.io/f/xxxxxxx" — also set both <form action="...">
+  // See brand/signal-access/ACTIVATE-email-capture.md for step-by-step.
+  // ==========================================================================
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+  /* ambient field */
+  var cv=document.getElementById("field"),ctx=cv.getContext("2d"),W,H,dpr,stars=[],t=0;
+  function size(){ dpr=Math.min(devicePixelRatio||1,2); W=cv.width=innerWidth*dpr; H=cv.height=innerHeight*dpr;
+    cv.style.width=innerWidth+"px"; cv.style.height=innerHeight+"px"; stars=[];
+    var n=Math.min(150,Math.floor(innerWidth*innerHeight/9000));
+    for(var i=0;i<n;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:(Math.random()*1.3+.2)*dpr,a:Math.random()*.5+.15,tw:Math.random()*2}); }
+  function wave(y,amp,len,sp,col,al){ ctx.beginPath();
+    for(var x=0;x<=W;x+=6*dpr){ var yy=y+Math.sin((x/len)+t*sp)*amp; x===0?ctx.moveTo(x,yy):ctx.lineTo(x,yy); }
+    ctx.strokeStyle=col; ctx.globalAlpha=al; ctx.lineWidth=1*dpr; ctx.stroke(); ctx.globalAlpha=1; }
+  function draw(){ ctx.clearRect(0,0,W,H);
+    for(var i=0;i<stars.length;i++){ var s=stars[i]; ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,6.28);
+      ctx.fillStyle="rgba(199,201,214,"+(s.a*(0.6+0.4*Math.sin(t*1.5+s.tw)))+")"; ctx.fill(); }
+    wave(H*0.30,26*dpr,220*dpr,.8,"rgba(139,92,255,.5)",.28);
+    wave(H*0.55,40*dpr,320*dpr,.5,"rgba(46,140,255,.5)",.20);
+    wave(H*0.78,22*dpr,180*dpr,1.1,"rgba(139,92,255,.4)",.15);
+    t+=0.012; if(!reduce) requestAnimationFrame(draw); }
+  size(); draw();
+  addEventListener("resize",function(){ size(); if(reduce){ t=0; draw(); } });
+
+  /* pupils track cursor (all emblems) */
+  if(!reduce){
+    addEventListener("pointermove",function(e){
+      document.querySelectorAll(".emblem").forEach(function(em){
+        var r=em.getBoundingClientRect(); if(r.bottom<0||r.top>innerHeight) return;
+        var vx=(e.clientX-(r.left+r.width/2))/innerWidth, vy=(e.clientY-(r.top+r.height/2))/innerHeight;
+        em.querySelectorAll(".pupil").forEach(function(p){ p.setAttribute("transform","translate("+(vx*5).toFixed(2)+","+(vy*4).toFixed(2)+")"); });
+      });
+    },{passive:true});
+  }
+
+  /* nav stuck state */
+  var nav=document.getElementById("nav");
+  addEventListener("scroll",function(){ nav.classList.toggle("stuck", scrollY>40); },{passive:true});
+
+  /* scroll reveal */
+  var revs=[].slice.call(document.querySelectorAll(".rev:not(.in)"));
+  if("IntersectionObserver" in window && !reduce){
+    var io=new IntersectionObserver(function(es){ es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add("in"); io.unobserve(en.target); } }); },{threshold:.16});
+    revs.forEach(function(el){ io.observe(el); });
+  } else { revs.forEach(function(el){ el.classList.add("in"); }); }
+
+  /* countdown: Early access -> Launch -> Preorder close */
+  var MILES=[
+    {at:Date.parse("2026-07-30T00:00:00-05:00"),label:"Early access opens in"},
+    {at:Date.parse("2026-08-01T00:00:00-05:00"),label:"Public launch in"},
+    {at:Date.parse("2026-08-05T23:59:59-05:00"),label:"Preorder closes in"}
+  ];
+  var dd=document.getElementById("dd"),hh=document.getElementById("hh"),mm=document.getElementById("mm"),ss=document.getElementById("ss"),clab=document.getElementById("count-label");
+  function pad(n){ return (n<10?"0":"")+n; }
+  function tick(){ var now=Date.now(),next=null;
+    for(var i=0;i<MILES.length;i++){ if(MILES[i].at>now){ next=MILES[i]; break; } }
+    if(!next){ clab.textContent="Signal 01 is live"; dd.textContent=hh.textContent=mm.textContent=ss.textContent="00"; return; }
+    clab.textContent=next.label; var d=Math.max(0,next.at-now),sec=Math.floor(d/1000);
+    dd.textContent=pad(Math.floor(sec/86400)); hh.textContent=pad(Math.floor(sec%86400/3600));
+    mm.textContent=pad(Math.floor(sec%3600/60)); ss.textContent=pad(sec%60); }
+  tick(); setInterval(tick,1000);
+
+  /* bind both capture forms */
+  function valid(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  document.querySelectorAll("form.cap").forEach(function(form){
+    var email=form.querySelector("input[type=email]"), fine=form.querySelector(".fine"),
+        granted=form.parentNode.querySelector(".granted"), ok=fine.textContent;
+    form.addEventListener("submit",function(e){
+      e.preventDefault(); var v=(email.value||"").trim();
+      if(!valid(v)){ fine.textContent="Enter a valid frequency (email) to lock the signal."; fine.classList.add("err"); email.focus(); return; }
+      fine.classList.remove("err"); fine.textContent=ok;
+      function win(){ form.style.display="none"; granted.classList.add("on"); granted.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"}); }
+      if(SIGNAL_ENDPOINT){ fetch(SIGNAL_ENDPOINT,{method:"POST",headers:{"Accept":"application/json","Content-Type":"application/json"},body:JSON.stringify({email:v,source:"coming-soon-site",drop:"Signal 01"})}).then(win).catch(win); }
+      else { win(); }
+    });
+  });
+})();
+</script>
+</body>
+</html>

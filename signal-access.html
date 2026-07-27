@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Signal Access — Fabi Ware // Beyond Human Vision: Signal 01</title>
+<meta name="description" content="Join Signal Access. Be first through the door when Beyond Human Vision: Signal 01 transmits — August 1. Dare to Be Different." />
+<meta property="og:title" content="Join Signal Access — Fabi Ware" />
+<meta property="og:description" content="See What Others Can't. Beyond Human Vision: Signal 01 — August 1." />
+<meta name="theme-color" content="#0A0912" />
+<meta name="robots" content="noindex, nofollow" /><!-- PREVIEW: remove this line at real launch so search engines can find the page -->
+<!--
+  ============================================================================
+  FABI WARE — "JOIN SIGNAL ACCESS" capture page
+  Purpose: email capture for the Signal 01 drop (early access Jul 30, launch Aug 1).
+  This is the destination the "Join Signal Access — link in bio" posts point to.
+
+  >>> ONE THING TO WIRE UP: email capture endpoint (see SIGNAL_ENDPOINT below).
+      Until it's set, the form shows the success state but stores nothing.
+      Three easy options, no code beyond pasting a URL:
+        1. Shopify: if fabi-ware.com is on Shopify, use its native "customer" /
+           newsletter form action instead of this one (recommended — list already exists).
+        2. Formspree (free): create a form at formspree.io, paste its endpoint URL.
+        3. Mailchimp/Klaviyo/Beehiiv: paste the embedded form's POST action URL.
+      Set both the <form action="..."> attribute AND the SIGNAL_ENDPOINT constant.
+
+  ACCURACY GUARDRAILS (per brand brief — do not remove):
+    - No pricing numbers. No product claims (fabric/weight/UV/"limited edition").
+    - No fake scarcity. Only real, confirmed dates: early access Jul 30,
+      public launch Aug 1, preorder closes Aug 5, 2026.
+    - The three-eye emblem is a brand motif (SVG), NOT the AI shirt mockup —
+      so nothing here implies a manufactured product exists yet.
+  ============================================================================
+-->
+<style>
+  :root{
+    --bg:#0A0912;            /* mineral-washed black, violet bias */
+    --bg-2:#100D1D;
+    --surface:#15122A;
+    --line:#2A2540;          /* violet-grey hairline */
+    --silver:#C7C9D6;        /* chrome / oxidized silver body */
+    --silver-dim:#8B8AA3;
+    --white:#EDEEF4;
+    --uv:#8B5CFF;            /* ULTRAVIOLET — hero accent */
+    --uv-soft:#A98BFF;
+    --blue:#2E8CFF;          /* electric blue — secondary */
+    --lime:#C6FF3D;          /* acid-lime — reserved: live signal + CTA only */
+    --lime-ink:#0A0912;
+
+    --mono:ui-monospace,"SF Mono","Cascadia Code","JetBrains Mono",Menlo,Consolas,monospace;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+
+    --maxw:600px;
+  }
+  /* This page deliberately commits to one visual world: a dark receiver screen,
+     "the Fabi Ware dimension." It stays dark under any viewer theme toggle. */
+  :root[data-theme="light"], :root[data-theme="dark"]{ color-scheme:dark; }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background:var(--bg);
+    color:var(--silver);
+    font-family:var(--sans);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+    min-height:100vh;
+    min-height:100svh;
+    overflow-x:hidden;
+  }
+
+  /* ambient signal canvas */
+  #field{
+    position:fixed; inset:0; width:100%; height:100%;
+    z-index:0; display:block; pointer-events:none;
+  }
+  /* vignette + scan wash over the canvas */
+  .atmos{
+    position:fixed; inset:0; z-index:1; pointer-events:none;
+    background:
+      radial-gradient(120% 80% at 50% -10%, rgba(139,92,255,.18), transparent 55%),
+      radial-gradient(100% 70% at 50% 115%, rgba(46,140,255,.10), transparent 60%),
+      radial-gradient(140% 120% at 50% 50%, transparent 55%, rgba(5,4,10,.75) 100%);
+  }
+  .atmos::after{ /* faint scanlines */
+    content:""; position:absolute; inset:0;
+    background:repeating-linear-gradient(0deg, rgba(255,255,255,.020) 0 1px, transparent 1px 3px);
+    mix-blend-mode:overlay; opacity:.5;
+  }
+
+  .wrap{
+    position:relative; z-index:2;
+    min-height:100vh; min-height:100svh;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    gap:0; padding:40px 22px 26px;
+  }
+
+  /* staged reveal — "tuning in" */
+  .rise{ opacity:0; transform:translateY(10px); filter:blur(6px);
+    animation:tune .9s cubic-bezier(.2,.7,.2,1) forwards; }
+  .d1{animation-delay:.05s}.d2{animation-delay:.18s}.d3{animation-delay:.32s}
+  .d4{animation-delay:.46s}.d5{animation-delay:.60s}.d6{animation-delay:.74s}.d7{animation-delay:.88s}
+  @keyframes tune{ to{opacity:1; transform:none; filter:none;} }
+
+  /* readout eyebrow */
+  .readout{
+    display:flex; align-items:center; gap:10px;
+    font-family:var(--mono); font-size:11px; letter-spacing:.28em;
+    text-transform:uppercase; color:var(--silver-dim);
+    border:1px solid var(--line); border-radius:999px;
+    padding:8px 14px 8px 12px; background:rgba(21,18,42,.5);
+    backdrop-filter:blur(4px);
+  }
+  .dot{ width:8px; height:8px; border-radius:50%; background:var(--lime);
+    box-shadow:0 0 0 0 rgba(198,255,61,.6); animation:pulse 1.9s ease-out infinite; }
+  @keyframes pulse{ 0%{box-shadow:0 0 0 0 rgba(198,255,61,.55)} 70%{box-shadow:0 0 0 9px rgba(198,255,61,0)} 100%{box-shadow:0 0 0 0 rgba(198,255,61,0)} }
+  .readout b{ color:var(--silver); font-weight:600; }
+  .readout .sep{ color:var(--line); }
+
+  /* three-eye Oracle emblem */
+  .emblem{ width:104px; height:104px; margin:26px 0 6px; }
+  .emblem .orbit{ transform-origin:50% 50%; animation:spin 46s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+  .lid{ transform-box:fill-box; transform-origin:center; }
+  .blink .lid{ animation:blink 6.5s ease-in-out infinite; }
+  @keyframes blink{ 0%,92%,100%{transform:scaleY(1)} 96%{transform:scaleY(.08)} }
+
+  h1{
+    font-family:var(--sans); color:var(--white);
+    font-weight:800; letter-spacing:-.03em; line-height:.98;
+    font-size:clamp(2.7rem,10.5vw,4.9rem);
+    margin:6px 0 0; text-align:center; text-wrap:balance;
+  }
+  h1 .glow{ color:var(--uv-soft);
+    text-shadow:0 0 26px rgba(139,92,255,.55), 0 0 60px rgba(139,92,255,.25); }
+  .sub{
+    margin:16px 0 0; text-align:center; max-width:34ch;
+    color:var(--silver); font-size:clamp(1rem,3.6vw,1.18rem);
+    line-height:1.5; text-wrap:balance;
+  }
+  .brief{
+    margin:12px 0 0; text-align:center; max-width:42ch;
+    color:var(--silver-dim); font-size:.9rem; line-height:1.6;
+  }
+
+  /* countdown */
+  .count{ margin:30px 0 0; text-align:center; }
+  .count .lab{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.34em;
+    text-transform:uppercase; color:var(--silver-dim); margin-bottom:12px;
+  }
+  .clock{ display:flex; gap:10px; justify-content:center; }
+  .unit{ min-width:66px; padding:12px 8px 9px; border:1px solid var(--line);
+    border-radius:12px; background:linear-gradient(180deg,rgba(21,18,42,.7),rgba(10,9,18,.4)); }
+  .unit .n{ font-family:var(--mono); font-size:1.85rem; font-weight:600; color:var(--white);
+    font-variant-numeric:tabular-nums; line-height:1; }
+  .unit .k{ font-family:var(--mono); font-size:9.5px; letter-spacing:.22em; text-transform:uppercase;
+    color:var(--silver-dim); margin-top:7px; }
+
+  /* form */
+  form{ margin:34px 0 0; width:100%; max-width:440px; }
+  .row{ display:flex; gap:9px; }
+  input[type=email]{
+    flex:1 1 auto; min-width:0; font-family:var(--mono); font-size:15px;
+    color:var(--white); background:rgba(10,9,18,.6);
+    border:1px solid var(--line); border-radius:12px; padding:15px 16px;
+    letter-spacing:.02em; transition:border-color .18s, box-shadow .18s;
+  }
+  input[type=email]::placeholder{ color:#5a5675; }
+  input[type=email]:focus{ outline:none; border-color:var(--uv);
+    box-shadow:0 0 0 3px rgba(139,92,255,.22); }
+  button{
+    flex:0 0 auto; cursor:pointer; font-family:var(--mono);
+    font-size:13px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--lime-ink); background:var(--lime); border:none; border-radius:12px;
+    padding:0 20px; transition:transform .12s, box-shadow .2s, filter .2s;
+    box-shadow:0 0 0 0 rgba(198,255,61,0);
+  }
+  button:hover{ filter:brightness(1.06); box-shadow:0 8px 30px rgba(198,255,61,.28); }
+  button:active{ transform:translateY(1px); }
+  button:focus-visible, input:focus-visible{ outline:2px solid var(--uv-soft); outline-offset:3px; }
+  .fine{ margin:12px 2px 0; font-family:var(--mono); font-size:10.5px; letter-spacing:.12em;
+    text-transform:uppercase; color:var(--silver-dim); text-align:center; }
+  .err{ color:#FF6B8B; min-height:0; }
+
+  /* success state */
+  .granted{ display:none; width:100%; max-width:440px; margin:34px 0 0; text-align:center;
+    border:1px solid rgba(198,255,61,.45); border-radius:16px; padding:26px 22px;
+    background:linear-gradient(180deg, rgba(139,92,255,.10), rgba(10,9,18,.3)); }
+  .granted.on{ display:block; animation:tune .7s ease forwards; }
+  .granted .tag{ font-family:var(--mono); font-size:11px; letter-spacing:.3em; text-transform:uppercase;
+    color:var(--lime); display:inline-flex; align-items:center; gap:9px; }
+  .granted h2{ font-family:var(--sans); color:var(--white); font-weight:800; letter-spacing:-.02em;
+    font-size:1.5rem; margin:12px 0 8px; }
+  .granted p{ color:var(--silver); font-size:.95rem; line-height:1.55; margin:0 auto; max-width:32ch; }
+
+  footer{ margin:46px 0 4px; text-align:center; }
+  .mark{ font-family:var(--mono); font-size:11px; letter-spacing:.3em; text-transform:uppercase;
+    color:var(--silver); }
+  .links{ margin-top:12px; display:flex; gap:18px; justify-content:center; flex-wrap:wrap; }
+  .links a{ font-family:var(--mono); font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--silver-dim); text-decoration:none; border-bottom:1px solid transparent; padding-bottom:2px;
+    transition:color .18s, border-color .18s; }
+  .links a:hover{ color:var(--uv-soft); border-color:var(--uv); }
+  .tagline{ margin-top:16px; font-family:var(--sans); font-size:12px; letter-spacing:.36em;
+    text-transform:uppercase; color:var(--silver-dim); }
+  .tagline .star{ color:var(--uv-soft); }
+
+  @media (max-width:420px){
+    .row{ flex-direction:column; }
+    button{ padding:14px 20px; }
+    .unit{ min-width:60px; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    .rise{ animation:none; opacity:1; transform:none; filter:none; }
+    .dot{ animation:none; } .emblem .orbit{ animation:none; } .blink .lid{ animation:none; }
+    .granted.on{ animation:none; }
+  }
+</style>
+</head>
+<body>
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="atmos" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <div class="readout rise d1">
+      <span class="dot" aria-hidden="true"></span>
+      <span>Signal Detected</span><span class="sep">//</span><b>Transmission 01</b>
+      <span class="sep">·</span><span id="stamp">08.01.26</span>
+    </div>
+
+    <svg class="emblem blink rise d2" viewBox="0 0 120 120" role="img" aria-label="Fabi Ware Oracle emblem — three eyes within an orbit">
+      <defs>
+        <radialGradient id="pg" cx="50%" cy="42%" r="60%">
+          <stop offset="0%" stop-color="#A98BFF"/><stop offset="60%" stop-color="#6D3BFF"/><stop offset="100%" stop-color="#2E8CFF"/>
+        </radialGradient>
+        <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#EDEEF4"/><stop offset="45%" stop-color="#8B8AA3"/><stop offset="100%" stop-color="#2A2540"/>
+        </linearGradient>
+      </defs>
+      <g class="orbit">
+        <ellipse cx="60" cy="60" rx="54" ry="24" fill="none" stroke="url(#ring)" stroke-width="1.2" opacity=".7"/>
+        <ellipse cx="60" cy="60" rx="24" ry="54" fill="none" stroke="url(#ring)" stroke-width="1" opacity=".35"/>
+        <circle cx="114" cy="60" r="2" fill="#C6FF3D"/>
+      </g>
+      <g id="eyes">
+        <g class="eye" data-cx="60" data-cy="30">
+          <path class="lid" d="M46 30 Q60 18 74 30 Q60 42 46 30 Z" fill="#0A0912" stroke="#8B8AA3" stroke-width="1.1"/>
+          <circle class="pupil" cx="60" cy="30" r="4.6" fill="url(#pg)"/>
+        </g>
+        <g class="eye" data-cx="60" data-cy="60">
+          <path class="lid" d="M44 60 Q60 46 76 60 Q60 74 44 60 Z" fill="#0A0912" stroke="#C7C9D6" stroke-width="1.2"/>
+          <circle class="pupil" cx="60" cy="60" r="5.4" fill="url(#pg)"/>
+        </g>
+        <g class="eye" data-cx="60" data-cy="90">
+          <path class="lid" d="M46 90 Q60 78 74 90 Q60 102 46 90 Z" fill="#0A0912" stroke="#8B8AA3" stroke-width="1.1"/>
+          <circle class="pupil" cx="60" cy="90" r="4.6" fill="url(#pg)"/>
+        </g>
+      </g>
+    </svg>
+
+    <h1 class="rise d3">See What<br><span class="glow">Others Can't.</span></h1>
+    <p class="sub rise d4">For those who were never meant to blend in.</p>
+    <p class="brief rise d4"><em>Beyond Human Vision: Signal 01</em> transmits August 1. Signal Access opens the door 48 hours early.</p>
+
+    <section class="count rise d5" aria-live="off">
+      <div class="lab" id="count-label">Early access opens in</div>
+      <div class="clock">
+        <div class="unit"><div class="n" id="dd">--</div><div class="k">Days</div></div>
+        <div class="unit"><div class="n" id="hh">--</div><div class="k">Hrs</div></div>
+        <div class="unit"><div class="n" id="mm">--</div><div class="k">Min</div></div>
+        <div class="unit"><div class="n" id="ss">--</div><div class="k">Sec</div></div>
+      </div>
+    </section>
+
+    <form class="rise d6" id="signal-form" action="" method="POST" novalidate>
+      <div class="row">
+        <input type="email" name="email" id="email" autocomplete="email" required
+               placeholder="you@frequency.com" aria-label="Email address" />
+        <button type="submit">Join Signal Access</button>
+      </div>
+      <p class="fine" id="fine">Be first through the door on 08.01.26.</p>
+    </form>
+
+    <section class="granted" id="granted" role="status" aria-live="polite">
+      <span class="tag"><span class="dot" aria-hidden="true"></span>Signal Access Granted</span>
+      <h2>You're on the list.</h2>
+      <p>Watch your inbox. The signal transmits <b>08.01.26</b> — and you'll be first through the door.</p>
+    </section>
+
+    <footer class="rise d7">
+      <div class="mark">Fabi Ware · Beyond Human Vision</div>
+      <nav class="links">
+        <a href="https://fabi-ware.com/" target="_blank" rel="noopener">fabi-ware.com</a>
+        <a href="https://www.instagram.com/darebyfabiware/" target="_blank" rel="noopener">@darebyfabiware</a>
+      </nav>
+      <div class="tagline"><span class="star">✮</span> Dare to Be Different <span class="star">✮</span></div>
+    </footer>
+  </main>
+
+<script>
+(function(){
+  "use strict";
+  // ==== WIRE UP EMAIL CAPTURE HERE ==========================================
+  // Paste your form endpoint URL (Formspree / Mailchimp / Shopify / Klaviyo).
+  // Also set the matching URL on <form action="..."> above for no-JS fallback.
+  var SIGNAL_ENDPOINT = ""; // e.g. "https://formspree.io/f/xxxxxxx"
+  // ==========================================================================
+
+  var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+  /* ---- ambient signal field (starfield + drifting waves) ---- */
+  var cv = document.getElementById("field"), ctx = cv.getContext("2d"), W, H, dpr, stars = [], t = 0;
+  function size(){
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = cv.width = innerWidth * dpr; H = cv.height = innerHeight * dpr;
+    cv.style.width = innerWidth + "px"; cv.style.height = innerHeight + "px";
+    stars = [];
+    var n = Math.min(150, Math.floor(innerWidth * innerHeight / 9000));
+    for (var i=0;i<n;i++) stars.push({x:Math.random()*W, y:Math.random()*H, r:(Math.random()*1.3+.2)*dpr, a:Math.random()*.5+.15, tw:Math.random()*2});
+  }
+  function wave(yBase, amp, len, speed, col, alpha){
+    ctx.beginPath();
+    for (var x=0; x<=W; x+=6*dpr){
+      var y = yBase + Math.sin((x/len) + t*speed) * amp;
+      x===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+    }
+    ctx.strokeStyle = col; ctx.globalAlpha = alpha; ctx.lineWidth = 1*dpr; ctx.stroke(); ctx.globalAlpha = 1;
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    for (var i=0;i<stars.length;i++){ var s=stars[i];
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 6.28);
+      ctx.fillStyle = "rgba(199,201,214," + (s.a*(0.6+0.4*Math.sin(t*1.5+s.tw))) + ")"; ctx.fill();
+    }
+    wave(H*0.30, 26*dpr, 220*dpr, .8,  "rgba(139,92,255,.5)", .30);
+    wave(H*0.52, 40*dpr, 320*dpr, .5,  "rgba(46,140,255,.5)", .22);
+    wave(H*0.74, 22*dpr, 180*dpr, 1.1, "rgba(139,92,255,.4)", .16);
+    t += 0.012;
+    if(!reduce) requestAnimationFrame(draw);
+  }
+  size(); draw();
+  addEventListener("resize", function(){ size(); if(reduce){ t=0; draw(); } });
+
+  /* ---- Oracle pupils track the cursor ("it sees you") ---- */
+  if(!reduce){
+    var eyes = [].slice.call(document.querySelectorAll(".eye"));
+    addEventListener("pointermove", function(e){
+      var em = document.querySelector(".emblem"); if(!em) return;
+      var r = em.getBoundingClientRect();
+      var vx = (e.clientX - (r.left+r.width/2)) / innerWidth;
+      var vy = (e.clientY - (r.top+r.height/2)) / innerHeight;
+      eyes.forEach(function(g){
+        var p = g.querySelector(".pupil");
+        p.setAttribute("transform","translate("+(vx*5).toFixed(2)+","+(vy*4).toFixed(2)+")");
+      });
+    }, {passive:true});
+  }
+
+  /* ---- countdown: rolls Early access -> Launch -> Preorder close ---- */
+  var MILES = [
+    { at: Date.parse("2026-07-30T00:00:00-05:00"), label: "Early access opens in" },
+    { at: Date.parse("2026-08-01T00:00:00-05:00"), label: "Public launch in" },
+    { at: Date.parse("2026-08-05T23:59:59-05:00"), label: "Preorder closes in" }
+  ];
+  var dd=document.getElementById("dd"),hh=document.getElementById("hh"),mm=document.getElementById("mm"),ss=document.getElementById("ss"),clab=document.getElementById("count-label");
+  function pad(n){ return (n<10?"0":"")+n; }
+  function tick(){
+    var now = Date.now(), next = null;
+    for (var i=0;i<MILES.length;i++){ if (MILES[i].at > now){ next = MILES[i]; break; } }
+    if(!next){ clab.textContent = "Signal 01 is live"; dd.textContent=hh.textContent=mm.textContent=ss.textContent="00"; return; }
+    clab.textContent = next.label;
+    var d = Math.max(0, next.at - now), sec = Math.floor(d/1000);
+    dd.textContent = pad(Math.floor(sec/86400));
+    hh.textContent = pad(Math.floor(sec%86400/3600));
+    mm.textContent = pad(Math.floor(sec%3600/60));
+    ss.textContent = pad(sec%60);
+  }
+  tick(); setInterval(tick, 1000);
+
+  /* ---- capture ---- */
+  var form=document.getElementById("signal-form"), email=document.getElementById("email"),
+      fine=document.getElementById("fine"), granted=document.getElementById("granted");
+  var okmsg = fine.textContent;
+  function valid(v){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v); }
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var v = (email.value||"").trim();
+    if(!valid(v)){ fine.textContent = "Enter a valid frequency (email) to lock the signal."; fine.classList.add("err"); email.focus(); return; }
+    fine.classList.remove("err"); fine.textContent = okmsg;
+    function win(){ form.style.display="none"; document.querySelector(".count").style.display="none"; granted.classList.add("on"); granted.scrollIntoView({behavior:reduce?"auto":"smooth",block:"center"}); }
+    if(SIGNAL_ENDPOINT){
+      fetch(SIGNAL_ENDPOINT,{method:"POST",headers:{"Accept":"application/json","Content-Type":"application/json"},body:JSON.stringify({email:v,source:"signal-access",drop:"Signal 01"})})
+        .then(win).catch(function(){ /* still grant UX; capture also has no-JS <form action> fallback */ win(); });
+    } else { win(); }
+  });
+})();
+</script>
+</body>
+</html>
